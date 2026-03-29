@@ -1,0 +1,17 @@
+.text {
+    display: inline;
+}
+
+a {
+    display: block;
+}
+
+/* a {
+    display: inline-block;
+    height: 100px;
+    width: 100px;
+} */
+
+p {
+    height: 100px;
+}

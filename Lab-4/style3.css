@@ -1,0 +1,66 @@
+
+.f-div {
+    height: 400px;
+    width: 400px;
+    background-color: red;
+    margin-top: 10%;
+    position: absolute;
+    animation: move-forward-backward 1.5s infinite alternate ease-in-out;
+}
+
+.x-div {
+    height: 400px;
+    width: 400px;
+    background-color: purple;
+    margin: 10px;
+}
+
+.pos {
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    background-color: rgb(6, 0, 128);
+    margin: 10px;
+}
+
+/* .container {
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} */
+
+.container {
+    height: 100vh;
+    display: grid;
+    /* grid-template-columns: 1fr 1fr 1fr; */
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@keyframes move-forward-backward {
+    /* from {
+        background-color: red;
+        margin-left: 0;
+    }
+
+    to {
+        background-color: blue;
+        margin-left: 300px;
+    } */
+    
+    0% {
+        background-color: red;
+        margin-left: 0;
+    }
+
+    100% {
+        background-color: blue;
+        margin-left: 300px;
+    }
+}
+
+@media (max-width: 700px) {
+    .container {
+        /* flex-direction: column; */
+    }
+}
