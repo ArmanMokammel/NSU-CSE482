@@ -1,7 +1,19 @@
 import React from "react";
 import { Link } from "react-router";
+import { useAuth } from "../../contexts/AuthContext";
+import { auth } from "../../firebase";
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
+  const { currentUser } = useAuth();
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -33,24 +45,40 @@ const Navbar = () => {
             <li>
               <Link className="nav-link" to={"/services"}>Services</Link>
             </li>
-            <li>
-              <Link className="nav-link" to={"/products"}>Products</Link>
-            </li>
-            <li>
-              <Link className="nav-link" to={"/product-list"}>Product List</Link>
-            </li>
+            {currentUser && (
+              <>
+                <li>
+                  <Link className="nav-link" to={"/products"}>Products</Link>
+                </li>
+                <li>
+                  <Link className="nav-link" to={"/product-list"}>Product List</Link>
+                </li>
+              </>
+            )}
           </ul>
-          <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
+          <div className="d-flex align-items-center">
+            {currentUser ? (
+              <div className="d-flex align-items-center">
+                <img
+                  src={currentUser.photoURL}
+                  alt={currentUser.displayName}
+                  className="rounded-circle me-2"
+                  style={{ width: "40px", height: "40px" }}
+                />
+                <span className="me-3">{currentUser.displayName}</span>
+                <button
+                  className="btn btn-outline-danger"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link to="/sign-in" className="btn btn-outline-primary">
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

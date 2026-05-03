@@ -8,6 +8,8 @@ import Services from "../pages/Services/Services";
 import AddProduct from "../pages/AddProduct/AddProduct";
 import ProductList from "../pages/ProductList/ProductList";
 import EditProduct from "../pages/EditProduct/EditProduct";
+import SignIn from "../pages/SignIn/SignIn";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +34,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: <AddProduct></AddProduct>,
+        element: (
+          <ProtectedRoute>
+            <AddProduct />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/product-list",
@@ -40,8 +46,16 @@ const router = createBrowserRouter([
       },
       {
         path: "/edit-product/:id",
-        element: <EditProduct></EditProduct>,
+        element: (
+          <ProtectedRoute>
+            <EditProduct />
+          </ProtectedRoute>
+        ),
       },
+      {
+        path: "/sign-in",
+        element: <SignIn></SignIn>,
+        },
     ],
   },
 ]);

@@ -3,15 +3,30 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const admin = require("./firebaseAdmin");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 // const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.v2kjlhg.mongodb.net/?appName=Cluster0`;
 const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-uikagwn-shard-00-00.v2kjlhg.mongodb.net:27017,ac-uikagwn-shard-00-01.v2kjlhg.mongodb.net:27017,ac-uikagwn-shard-00-02.v2kjlhg.mongodb.net:27017/?ssl=true&replicaSet=atlas-yigrxl-shard-0&authSource=admin&appName=Cluster0`;
+
+const verifyToken = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    res.status(401).send({ message: "Invalid token" });
+  }
+};
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -59,7 +74,7 @@ app.get("/api/products", async (request, response) => {
 });
 
 // CREATE ONE API
-app.post("/api/products", async (request, response) => {
+app.post("/api/products", verifyToken, async (request, response) => {
   try {
     const product = request.body;
     const result = await productCollection.insertOne(product);
