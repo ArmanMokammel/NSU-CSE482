@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import axios from 'axios'
+import { useNavigate } from 'react-router';
 
 const AddProduct = () => {
+
+    const navigate  = useNavigate();
+
     const [form, setForm] = useState({
         name: "",
         description: "",
@@ -15,9 +19,24 @@ const AddProduct = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(form);
         const res = await axios.post("http://localhost:5000/api/products", form);
-        console.log(res);
         alert('Done');
+        navigate('/product-list');
+    }
+
+    const handleImageInput = (e) => {
+        const img = e.target.files[0];
+        
+        if (img) {
+            const reader = new FileReader();
+            reader.onload = (loadEvent) => {
+                const base64Image = loadEvent.target.result;
+                setForm((prevForm) => ({...prevForm, image:base64Image }));
+                console.log(base64Image)
+            }
+            reader.readAsDataURL(img);
+        }
     }
 
     return (
@@ -33,7 +52,7 @@ const AddProduct = () => {
                 </div>
                 <div className="mb-3">
                     <label className="form-label" htmlFor="image">Image</label>
-                    <input type="text" name="image" className="form-control" id="image" onChange={handleChange}/>
+                    <input type="file" accept="image/*" name="image" className="form-control" id="image" onChange={handleImageInput}/>
                 </div>
                 <div className="mb-3">
                     <label className="form-label" htmlFor="quantity">Quantity</label>

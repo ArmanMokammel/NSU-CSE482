@@ -36,6 +36,9 @@ const Navbar = () => {
             <li>
               <Link className="nav-link" to={"/products"}>Products</Link>
             </li>
+            <li>
+              <Link className="nav-link" to={"/product-list"}>Product List</Link>
+            </li>
           </ul>
           <form className="d-flex" role="search">
             <input
